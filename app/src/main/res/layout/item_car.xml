@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnCount="2"
+              android:background="@drawable/item"
+              android:layout_marginBottom="5dp"
+              style="@style/item">
+    <TextView
+            android:id="@+id/TextBrand"
+            android:text="Brand"
+            android:layout_columnWeight="1"
+            style="@style/header"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"/>
+    <TextView
+            android:id="@+id/TextName"
+            android:text="Name"
+            android:layout_columnWeight="1"
+            style="@style/sub"/>
+    <TextView
+            android:id="@+id/TextNumber"
+            android:text="Number"
+            android:textAlignment="center"
+            android:layout_columnSpan="2"
+            android:textColor="@color/blueligt"
+            android:layout_columnWeight="1"/>
+</GridLayout>
