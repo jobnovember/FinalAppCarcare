@@ -9,6 +9,7 @@ class DataBase {
 
     data class Car(var brand: String, var name: String, var number: String)
     data class User(var name: String = "", var phone: String = "", var cars: ArrayList<HashMap<String, Any>>? = null)
+    data class Booking(var date: String="",var time: String="", var status: String="", var customer: String ="", var cars: String ="")
 
     fun addUser(uid: String, name: String, phone: String, cars: ArrayList<DataBase.Car>): Boolean {
         for (item in cars) {

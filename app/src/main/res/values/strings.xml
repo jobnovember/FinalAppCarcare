@@ -11,4 +11,8 @@
     <string name="profile">Profile</string>
     <string name="logout">Logout</string>
     <string name="login">Login</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="status">Status</string>
+    <string name="customer">Customer</string>
 </resources>

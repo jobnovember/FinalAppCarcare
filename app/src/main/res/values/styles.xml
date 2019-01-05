@@ -41,6 +41,7 @@
     </style>
 
     <style name="item">
+
         <item name="android:padding">10dp</item>
     </style>
 </resources>
