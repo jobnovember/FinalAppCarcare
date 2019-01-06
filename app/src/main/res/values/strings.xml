@@ -15,4 +15,8 @@
     <string name="time">Time</string>
     <string name="status">Status</string>
     <string name="customer">Customer</string>
+    <string name="brand">Brand</string>
+    <string name="car_name">Car Name</string>
+    <string name="car_number">Car Number</string>
+    <string name="none">-</string>
 </resources>

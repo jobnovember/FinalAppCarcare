@@ -1,6 +1,7 @@
 package com.example.jobpa.finalproject
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,11 @@ class BookingAdapter(var mContext: Context, var mItems:List<DataBase.Booking>): 
         var item = mItems[p1]
         p0.textTime.text = item.time
         p0.textStatus.text = item.status
+        when(item.status) {
+           "empty"-> p0.textStatus.setBackgroundColor(Color.GREEN)
+            "waiting"-> p0.textStatus.setBackgroundColor(Color.YELLOW)
+            "finish"-> p0.textStatus.setBackgroundColor(Color.RED)
+        }
         p0.textCustomer.text = item.customer
     }
 }

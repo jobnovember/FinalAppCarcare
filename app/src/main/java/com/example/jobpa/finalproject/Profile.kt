@@ -109,8 +109,8 @@ class Profile: Fragment() {
                         var name = item["name"].toString()
                         var number = item["number"].toString()
                         mCars.add(DataBase.Car(brand,name,number))
+                        mAdapterCar.notifyItemInserted(mCars.size-1)
                     }
-                    mAdapterCar.notifyDataSetChanged()
                 }
                 mDialogProgressDialog.dismiss()
             }.addOnFailureListener {it->
