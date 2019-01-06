@@ -1,12 +1,14 @@
 package com.example.jobpa.finalproject
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,22 +24,16 @@ class BookActivity : AppCompatActivity() {
     private var mUser:DataBase.User? = null
     private var mCarsList:ArrayList<HashMap<String, Any>>? = null
     private var mCars = ArrayList<DataBase.Car>()
-
+    private var mServiceList = ArrayList<DataBase.Service>()
     //view
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mTextName: TextView
-    private lateinit var mTextDate: TextView
-    private lateinit var mTextTime: TextView
-    private lateinit var mTextCarBrand: TextView
-    private lateinit var mTextCarName: TextView
-    private lateinit var mTextCarNumber: TextView
-
     //firebase
     private val mFirestore = FirebaseFirestore.getInstance()
     //DataRef
     private var userRef = mFirestore.collection("users")
     //Adapter
     private lateinit var  mAdapter: CarAdapter
+    private lateinit var  mServiceAdapter: ServiceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +46,13 @@ class BookActivity : AppCompatActivity() {
 
 
     private fun initView() {
-        mRecyclerView = findViewById(R.id.recycler_view)
+        //Adapter
         mAdapter = CarAdapter(this!!, mCars)
+        mServiceAdapter = ServiceAdapter(this!!, R.layout.item_service, mServiceList)
+        //View
+        mRecyclerView = findViewById(R.id.recycler_view)
         mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        mTextName = findViewById(R.id.textName)
-        mTextDate = findViewById(R.id.textDate)
-        mTextTime = findViewById(R.id.textTime)
-        mTextCarBrand = findViewById(R.id.textCarBrand)
-        mTextCarName = findViewById(R.id.textCarName)
-        mTextCarNumber = findViewById(R.id.textCarNumber)
-
         fetchUser()
 
         mAdapter.setOnItemClickListener(object: CarAdapter.OnItemClickListener{
@@ -69,13 +60,7 @@ class BookActivity : AppCompatActivity() {
                 car_brand = mCars[position].brand
                 car_name = mCars[position].name
                 car_number = mCars[position].number
-
-                mTextName.text = mUser!!.name
-                mTextDate.text = date
-                mTextTime.text = time
-                mTextCarBrand.text = car_brand
-                mTextCarName.text = car_name
-                mTextCarNumber.text = car_number
+                dialogService()
             }
             override fun onLongItemClick(item: View, position: Int) {
             }
@@ -100,6 +85,47 @@ class BookActivity : AppCompatActivity() {
            }
     }
 
+    private fun fetchService() {
+        mServiceList.clear()
+        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
+        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
+        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
+        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
+        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
+        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
+        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
+        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
+        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
+        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
+        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
+        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
+        mServiceAdapter.notifyDataSetChanged()
+    }
+
+    private fun dialogService() {
+        fetchService()
+        val view = layoutInflater.inflate(R.layout.dialog_service, null)
+        var listView = view.findViewById<ListView>(R.id.listView)
+        listView.adapter = mServiceAdapter
+        AlertDialog.Builder(this)
+            .setTitle("Select Service")
+            .setView(view)
+            .setPositiveButton("OK") { dialog, which ->
+                var sum:Int = 0
+                for(item in mServiceAdapter.getCheckedItems()) {
+                    if(item.checked) {
+                        sum += item.price.toInt()
+                    }
+                }
+                dialog.dismiss()
+                show(sum.toString())
+
+            }.setNegativeButton("Cancel") {dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun show(text:String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
@@ -109,4 +135,5 @@ class BookActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
+
 }

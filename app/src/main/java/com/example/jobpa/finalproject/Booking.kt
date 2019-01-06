@@ -87,7 +87,6 @@ class Booking: Fragment() {
         fetchBooking()
 
         mDate = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-            dialogProgress.show()
             mCalendar.set(Calendar.YEAR, year)
             mCalendar.set(Calendar.MONTH, month)
             mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -158,7 +157,7 @@ class Booking: Fragment() {
 
         if(!mBookList!!.isEmpty()) {
             val handler = Handler()
-            handler.postDelayed({dialogProgress.dismiss()}, 2000)
+            handler.postDelayed({dialogProgress.dismiss()}, 1000)
         }
     }
 

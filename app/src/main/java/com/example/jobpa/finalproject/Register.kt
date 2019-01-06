@@ -86,7 +86,7 @@ class Register: Fragment() {
 
         mAdapterCar.setOnItemClickListener(object:CarAdapter.OnItemClickListener{
             override fun onItemClick(item: View, position: Int) {
-                //onClick
+                createMenuDialog(position)
             }
 
             override fun onLongItemClick(item: View, position: Int) {
@@ -96,12 +96,12 @@ class Register: Fragment() {
     }
 
     private fun register() {
+        progressDialog.show()
         var email = mEditEmail.text.toString()
         var password = mEditPassword.text.toString()
         var confirm = mEditConfirm.text.toString()
         var name = mEditName.text.toString()
         var phone = mEditPhone.text.toString()
-        progressDialog.show()
         if(!TextUtils.isEmpty(email)
             && !TextUtils.isEmpty(password)
             && !TextUtils.isEmpty(confirm)

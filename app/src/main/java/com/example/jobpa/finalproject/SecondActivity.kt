@@ -64,6 +64,8 @@ class SecondActivity : AppCompatActivity() {
             mDrawerLayout.closeDrawers()
             true
         }
+        var fragment = Booking.newInstance()
+        repalceFragment(fragment)
     }
 
     private fun show(text:String) {
