@@ -19,4 +19,12 @@
     <string name="car_name">Car Name</string>
     <string name="car_number">Car Number</string>
     <string name="none">-</string>
+    <string name="service_name">Service Name</string>
+    <string name="price">Price</string>
+    <string name="description">Description</string>
+    <string name="bath">Bath</string>
+    <string name="service">Service</string>
+    <string name="personal">Personal Data</string>
+    <string name="add_car">Add Cars</string>
+    <string name="chose">Chose your cars</string>
 </resources>

@@ -115,6 +115,9 @@ class Register: Fragment() {
                           DataBase().addUser(uid, name, phone, mCars)
                           //register success
                           gotoSecondActivity()
+                      }else {
+                          show("Can't register")
+                          progressDialog.dismiss()
                       }
                    }
             }else {
@@ -152,18 +155,20 @@ class Register: Fragment() {
 
     private fun createInputDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_car, null)
-        var spinBrand = view.findViewById<Spinner>(R.id.spinBrand)
-        var spinName = view.findViewById<Spinner>(R.id.spinName)
-        var editNumber = view.findViewById<EditText>(R.id.editNumber)
+        val spinBrand = view.findViewById<Spinner>(R.id.spinBrand)
+        val spinName = view.findViewById<Spinner>(R.id.spinName)
+        val editNumber = view.findViewById<EditText>(R.id.editNumber)
 
-        var carBrand = mutableListOf<String>()
+        val carBrand = mutableListOf<String>()
         val carName = mutableListOf<String>()
+        val carType = mutableListOf<String>()
 
-        var carBrandAdapter = ArrayAdapter(context,android.R.layout.simple_spinner_dropdown_item, carBrand)
-        var carNameAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, carName)
+        val carBrandAdapter = ArrayAdapter(context,android.R.layout.simple_spinner_dropdown_item, carBrand)
+        val carNameAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, carName)
 
         var name = ""
         var brand = ""
+        var type = ""
 
         progressDialog.show()
 
@@ -194,12 +199,14 @@ class Register: Fragment() {
                 carsRef.document("data").get().addOnCompleteListener {
                     if(it.isSuccessful) {
                         carName.clear()
+                        carType.clear()
                         val document = it.result!!
                         val data = document.data
                         val snapshot = HashMap(data)
                         val args = snapshot[brand] as? ArrayList<HashMap<String, Any>>
                         for(item in args!!) {
-                           carName.add(item["name"].toString())
+                            carName.add(item["name"].toString())
+                            carType.add(item["type"].toString())
                         }
                         spinName.adapter = carNameAdapter
                         progressDialog.dismiss()
@@ -213,6 +220,7 @@ class Register: Fragment() {
             }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 name = carName[position]
+                type = carType[position]
             }
         }
 
@@ -220,9 +228,14 @@ class Register: Fragment() {
             .setTitle("Add Your Car")
             .setView(view)
             .setPositiveButton("OK") { dialog, which ->
-                mCars.add(DataBase.Car(brand ,name,editNumber.text.toString()))
+                if(type ==""){
+                    type="test"
+                }
+                mCars.add(DataBase.Car(brand ,name,editNumber.text.toString(),type))
                 mAdapterCar.notifyItemInserted(mCars.size-1)
                 mRecyClerView.scrollToPosition(mCars.size-1)
+                mAdapterCar.notifyDataSetChanged()
+                dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
@@ -232,17 +245,21 @@ class Register: Fragment() {
 
     private fun createInputDialog(pos:Int) {
         val view = layoutInflater.inflate(R.layout.dialog_car, null)
-        var spinBrand = view.findViewById<Spinner>(R.id.spinBrand)
-        var spinName = view.findViewById<Spinner>(R.id.spinName)
-        var editNumber = view.findViewById<EditText>(R.id.editNumber)
-        var carBrand = mutableListOf<String>()
-        val carName = mutableListOf<String>()
+        val spinBrand = view.findViewById<Spinner>(R.id.spinBrand)
+        val spinName = view.findViewById<Spinner>(R.id.spinName)
+        val editNumber = view.findViewById<EditText>(R.id.editNumber)
 
-        var carBrandAdapter = ArrayAdapter(context,android.R.layout.simple_spinner_dropdown_item, carBrand)
-        var carNameAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, carName)
+        val carBrand = mutableListOf<String>()
+        val carName = mutableListOf<String>()
+        val carType = mutableListOf<String>()
+
+        val carBrandAdapter = ArrayAdapter(context,android.R.layout.simple_spinner_dropdown_item, carBrand)
+        val carNameAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, carName)
 
         var name = mCars[pos].name
         var brand = mCars[pos].brand
+        var type = mCars[pos].type
+
         editNumber.text = Editable.Factory.getInstance().newEditable(mCars[pos].number)
         brandRef.document("brand").get().addOnCompleteListener { task->
             if(task.isSuccessful) {
@@ -276,6 +293,7 @@ class Register: Fragment() {
                         val args = snapshot[brand] as? ArrayList<HashMap<String, Any>>
                         for(item in args!!) {
                             carName.add(item["name"].toString())
+                            carType.add(item["type"].toString())
                         }
                         spinName.adapter = carNameAdapter
                     }
@@ -288,6 +306,7 @@ class Register: Fragment() {
             }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 name = carName[position]
+                type = carType[position]
             }
         }
 
@@ -295,9 +314,10 @@ class Register: Fragment() {
             .setTitle("Edit Cars")
             .setView(view)
             .setPositiveButton("OK") { dialog, which ->
-                mCars[pos] = DataBase.Car(brand,name, editNumber.text.toString())
+                mCars[pos] = DataBase.Car(brand,name, editNumber.text.toString(), type)
                 mAdapterCar.notifyItemChanged(pos)
                 mRecyClerView.scrollToPosition(pos)
+                dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
@@ -310,6 +330,5 @@ class Register: Fragment() {
         var i = Intent(context, SecondActivity::class.java)
         startActivity(i)
     }
-
 }
 

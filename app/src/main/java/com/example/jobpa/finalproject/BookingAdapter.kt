@@ -45,9 +45,9 @@ class BookingAdapter(var mContext: Context, var mItems:List<DataBase.Booking>): 
         p0.textTime.text = item.time
         p0.textStatus.text = item.status
         when(item.status) {
-           "empty"-> p0.textStatus.setBackgroundColor(Color.GREEN)
-            "waiting"-> p0.textStatus.setBackgroundColor(Color.YELLOW)
-            "finish"-> p0.textStatus.setBackgroundColor(Color.RED)
+           "empty"-> p0.textColor.setBackgroundColor(Color.GREEN)
+            "waiting"-> p0.textColor.setBackgroundColor(Color.YELLOW)
+            "finish"-> p0.textColor.setBackgroundColor(Color.RED)
         }
         p0.textCustomer.text = item.customer
     }

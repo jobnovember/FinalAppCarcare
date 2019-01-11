@@ -113,7 +113,6 @@ class Booking: Fragment() {
     }
 
     private fun fetchBooking() {
-        dialogProgress.show()
         mBookList!!.clear()
         mAdapter = BookingAdapter(context!!, mBookList!!)
         mRecyclerView.adapter = mAdapter
@@ -146,8 +145,14 @@ class Booking: Fragment() {
             }
         mAdapter.setOnItemClickListener(object: BookingAdapter.OnItemClickListener{
             override fun onItemClick(item: View, position: Int) {
-                var uid = mFirebaseAuth.currentUser!!.uid
-                if(mBookList!![position].status == "empty") {
+                if(mFirebaseAuth.currentUser == null) {
+                   show("Please Login First")
+                }
+                else if(mBookList!![position].status != "empty") {
+                    show("ไม่สามารถจองเวลานี้ได้")
+                }
+                else if(mBookList!![position].status == "empty") {
+                    var uid = mFirebaseAuth.currentUser!!.uid
                     var date = mBookList!![position].date
                     var time = mBookList!![position].time
                     book(date, time, uid)
@@ -156,8 +161,6 @@ class Booking: Fragment() {
         })
 
         if(!mBookList!!.isEmpty()) {
-            val handler = Handler()
-            handler.postDelayed({dialogProgress.dismiss()}, 1000)
         }
     }
 

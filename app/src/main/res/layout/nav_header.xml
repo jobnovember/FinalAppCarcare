@@ -8,10 +8,15 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:orientation="vertical"
         android:gravity="bottom">
-
+        <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/bankonrakrod"/>
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:text="@string/app_name"
+                style="@style/header"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 </LinearLayout>

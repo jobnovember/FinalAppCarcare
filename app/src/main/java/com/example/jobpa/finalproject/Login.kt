@@ -34,6 +34,7 @@ class Login: Fragment() {
     }
 
     private fun initView(v:View) {
+
         editEmail = v.findViewById(R.id.editEmail)
         editPassword = v.findViewById(R.id.editPassword)
         btnLogin = v.findViewById(R.id.btnLogin)
@@ -48,10 +49,12 @@ class Login: Fragment() {
                         dialogProgress.dismiss()
                         gotoSecondActivity()
                     }else {
+                        dialogProgress.dismiss()
                         show(task.exception?.message.toString())
                     }
                 }
             }else {
+                dialogProgress.dismiss()
                 show("Email and Password can't empty")
             }
         }

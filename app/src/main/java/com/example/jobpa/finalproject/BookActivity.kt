@@ -2,6 +2,7 @@ package com.example.jobpa.finalproject
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.jobpa.finalproject.ProgressDialog.Companion.progressDialog
 import com.google.firebase.firestore.FirebaseFirestore
 
 class BookActivity : AppCompatActivity() {
@@ -21,6 +23,7 @@ class BookActivity : AppCompatActivity() {
     private var car_brand : String = ""
     private var car_name: String = ""
     private var car_number: String = ""
+    private var car_type: String = ""
     private var mUser:DataBase.User? = null
     private var mCarsList:ArrayList<HashMap<String, Any>>? = null
     private var mCars = ArrayList<DataBase.Car>()
@@ -31,9 +34,12 @@ class BookActivity : AppCompatActivity() {
     private val mFirestore = FirebaseFirestore.getInstance()
     //DataRef
     private var userRef = mFirestore.collection("users")
+    private var serviceRef = mFirestore.collection("service")
     //Adapter
     private lateinit var  mAdapter: CarAdapter
     private lateinit var  mServiceAdapter: ServiceAdapter
+    //Dialog
+    private lateinit var mProgressDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,7 @@ class BookActivity : AppCompatActivity() {
         mRecyclerView = findViewById(R.id.recycler_view)
         mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
+        mProgressDialog = ProgressDialog.progressDialog(this)
         fetchUser()
 
         mAdapter.setOnItemClickListener(object: CarAdapter.OnItemClickListener{
@@ -60,6 +67,7 @@ class BookActivity : AppCompatActivity() {
                 car_brand = mCars[position].brand
                 car_name = mCars[position].name
                 car_number = mCars[position].number
+                car_type = mCars[position].type
                 dialogService()
             }
             override fun onLongItemClick(item: View, position: Int) {
@@ -78,7 +86,8 @@ class BookActivity : AppCompatActivity() {
                        var brand = item["brand"].toString()
                        var name = item["name"].toString()
                        var number = item["number"].toString()
-                       mCars.add(DataBase.Car(brand,name,number))
+                       var type = item["type"].toString()
+                       mCars.add(DataBase.Car(brand,name,number,type))
                        mAdapter.notifyItemInserted(mCars.size-1)
                    }
                }
@@ -86,20 +95,24 @@ class BookActivity : AppCompatActivity() {
     }
 
     private fun fetchService() {
+        mProgressDialog.show()
         mServiceList.clear()
-        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
-        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
-        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
-        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
-        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
-        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
-        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
-        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
-        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
-        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
-        mServiceList.add(DataBase.Service("ล้างรถ","2000","ล้างรถสะอาดหมดจด",false))
-        mServiceList.add(DataBase.Service("ขัดเงา","3500","ขัดแว๊ก",false))
-        mServiceAdapter.notifyDataSetChanged()
+        serviceRef
+            .whereEqualTo("type",car_type)
+            .get()
+            .addOnCompleteListener { task->
+                if(task.isSuccessful) {
+                    var document = task.result!!.documents
+                    for(item in document) {
+                        var name = item["name"].toString()
+                        var price = item["price"].toString()
+                        var description = item["description"].toString()
+                        mServiceList.add(DataBase.Service(name, price, description))
+                    }
+                    mProgressDialog.dismiss()
+                    mServiceAdapter.notifyDataSetChanged()
+                }
+            }
     }
 
     private fun dialogService() {

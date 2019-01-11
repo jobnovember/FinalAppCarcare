@@ -20,6 +20,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@color/colorPrimary"
+                        app:titleTextColor="@color/colorAccent"
                         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
         </FrameLayout>
         <!-- Container menu -->

@@ -7,17 +7,17 @@ class DataBase {
     private var usersRef = db.collection("users")
     private var carsList = ArrayList<HashMap<String, Any>>()
 
-    data class Car(var brand: String, var name: String, var number: String)
+    data class Car(var brand: String="", var name: String="", var number: String="", var type: String="")
     data class User(var name: String = "", var phone: String = "", var cars: ArrayList<HashMap<String, Any>>? = null)
     data class Booking(var date: String="",var time: String="", var status: String="", var customer: String ="", var cars: String ="")
     data class Service(var name: String="", var price: String="", var description: String="", var checked: Boolean = false)
-
     fun addUser(uid: String, name: String, phone: String, cars: ArrayList<DataBase.Car>): Boolean {
         for (item in cars) {
             var result = HashMap<String, Any>()
             result["brand"] = item.brand
             result["name"] = item.name
             result["number"] = item.number
+            result["type"] = item.type
             carsList.add(result)
         }
         var data = User(name, phone, carsList)
