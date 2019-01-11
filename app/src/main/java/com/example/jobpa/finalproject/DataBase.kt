@@ -4,14 +4,23 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class DataBase {
     private var db = FirebaseFirestore.getInstance()
-    private var usersRef = db.collection("users")
-    private var carsList = ArrayList<HashMap<String, Any>>()
 
     data class Car(var brand: String="", var name: String="", var number: String="", var type: String="")
+
     data class User(var name: String = "", var phone: String = "", var cars: ArrayList<HashMap<String, Any>>? = null)
-    data class Booking(var date: String="",var time: String="", var status: String="", var customer: String ="", var cars: String ="")
+
+    data class Booking(var date: String="",var time: String=""
+                       , var status: String="", var customer: String =""
+                       , var uid: String = ""
+                       , var cars: String ="", var sum:String =""
+                       , var service: ArrayList<HashMap<String, Any>>? = null)
+
     data class Service(var name: String="", var price: String="", var description: String="", var checked: Boolean = false)
+
     fun addUser(uid: String, name: String, phone: String, cars: ArrayList<DataBase.Car>): Boolean {
+        val usersRef = db.collection("users")
+        var carsList = ArrayList<HashMap<String, Any>>()
+
         for (item in cars) {
             var result = HashMap<String, Any>()
             result["brand"] = item.brand
@@ -26,16 +35,36 @@ class DataBase {
         return true
     }
 
-    fun getUser(uid: String): String?{
-        var msg:String? = null
-        var user = db.collection("users").document(uid)
-        user.get()
-            .addOnCompleteListener {
-                if(it.isSuccessful) {
-                    var data = it.result.data
-                    msg = data!!["name"].toString()
-                }
-            }
-        return msg
+    fun addBill(uid: String, name: String,car: String, sum: String, date: String, time: String, service: ArrayList<DataBase.Service>) {
+        val bookingRef = db.collection("booking")
+
+        var billList = ArrayList<HashMap<String, Any>>()
+
+        for(item in service) {
+            var result = HashMap<String, Any>()
+            result["name"] = item.name
+            result["description"] = item.description
+            result["price"] = item.price
+            billList.add(result)
+        }
+
+        /*val data = HashMap<String, Any>()
+        data["car"] = car
+        data["uid"] = uid
+        data["customer"] = name
+        data["date"] = date
+        data["time"] = time
+        data["status"] = "waiting"
+        data["sum"] = sum
+        data["service"] = billList*/
+
+        val data = DataBase.Booking(date, time,"waiting",name,uid,car,sum,billList)
+        bookingRef.add(data).addOnSuccessListener {
+
+        }
+        .addOnFailureListener {
+
+        }
+
     }
 }

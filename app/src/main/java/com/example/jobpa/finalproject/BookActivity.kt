@@ -28,6 +28,7 @@ class BookActivity : AppCompatActivity() {
     private var mCarsList:ArrayList<HashMap<String, Any>>? = null
     private var mCars = ArrayList<DataBase.Car>()
     private var mServiceList = ArrayList<DataBase.Service>()
+    private var mBill = ArrayList<DataBase.Service>()
     //view
     private lateinit var mRecyclerView: RecyclerView
     //firebase
@@ -119,19 +120,21 @@ class BookActivity : AppCompatActivity() {
         fetchService()
         val view = layoutInflater.inflate(R.layout.dialog_service, null)
         var listView = view.findViewById<ListView>(R.id.listView)
+        var sum:Int = 0
         listView.adapter = mServiceAdapter
         AlertDialog.Builder(this)
             .setTitle("Select Service")
             .setView(view)
             .setPositiveButton("OK") { dialog, which ->
-                var sum:Int = 0
                 for(item in mServiceAdapter.getCheckedItems()) {
                     if(item.checked) {
+                        mBill.add(item)
                         sum += item.price.toInt()
                     }
                 }
                 dialog.dismiss()
-                show(sum.toString())
+                //when finished
+                DataBase().addBill(uid, mUser!!.name, car_name, sum.toString(), date, time, mBill)
 
             }.setNegativeButton("Cancel") {dialog, which ->
                 dialog.dismiss()
