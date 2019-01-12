@@ -54,6 +54,10 @@ class SecondActivity : AppCompatActivity() {
                     var fragment = Profile.newInstance()
                     repalceFragment(fragment)
                 }
+                R.id.nav_bill-> {
+                    var fragment = Bill.newInstance()
+                    repalceFragment(fragment)
+                }
                 R.id.nav_logout-> {
                     logout()
                 }

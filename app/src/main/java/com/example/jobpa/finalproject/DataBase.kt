@@ -17,6 +17,11 @@ class DataBase {
 
     data class Service(var name: String="", var price: String="", var description: String="", var checked: Boolean = false)
 
+    data class Bill(var date:String="", var time:String="", var car:String="", var sum:String=""
+                    , var service: ArrayList<HashMap<String, Any>>? =null, var uid: String ="") {
+
+    }
+
     fun addUser(uid: String, name: String, phone: String, cars: ArrayList<DataBase.Car>): Boolean {
         val usersRef = db.collection("users")
         var carsList = ArrayList<HashMap<String, Any>>()
@@ -37,6 +42,7 @@ class DataBase {
 
     fun addBill(uid: String, name: String,car: String, sum: String, date: String, time: String, service: ArrayList<DataBase.Service>) {
         val bookingRef = db.collection("booking")
+        val billRef = db.collection("bills")
 
         var billList = ArrayList<HashMap<String, Any>>()
 
@@ -48,19 +54,17 @@ class DataBase {
             billList.add(result)
         }
 
-        /*val data = HashMap<String, Any>()
-        data["car"] = car
-        data["uid"] = uid
-        data["customer"] = name
-        data["date"] = date
-        data["time"] = time
-        data["status"] = "waiting"
-        data["sum"] = sum
-        data["service"] = billList*/
-
         val data = DataBase.Booking(date, time,"waiting",name,uid,car,sum,billList)
         bookingRef.add(data).addOnSuccessListener {
-
+            var id = it.id
+            val data = HashMap<String, Any>()
+            data["uid"] = uid
+            data["car"] = car
+            data["date"] = date
+            data["time"] = time
+            data["sum"] = sum
+            data["service"] = billList
+            billRef.document(id).set(data).addOnSuccessListener {  }
         }
         .addOnFailureListener {
 

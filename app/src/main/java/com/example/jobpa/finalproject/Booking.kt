@@ -114,6 +114,7 @@ class Booking: Fragment() {
 
     private fun fetchBooking() {
         mBookList!!.clear()
+        mBookList = ArrayList()
         mAdapter = BookingAdapter(context!!, mBookList!!)
         mRecyclerView.adapter = mAdapter
         var times = arrayListOf("8.00","8.30","9.00","9.30"

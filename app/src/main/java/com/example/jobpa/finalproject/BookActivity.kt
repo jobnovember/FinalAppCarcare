@@ -135,7 +135,7 @@ class BookActivity : AppCompatActivity() {
                 dialog.dismiss()
                 //when finished
                 DataBase().addBill(uid, mUser!!.name, car_name, sum.toString(), date, time, mBill)
-
+                sendResult("true")
             }.setNegativeButton("Cancel") {dialog, which ->
                 dialog.dismiss()
             }
@@ -146,8 +146,8 @@ class BookActivity : AppCompatActivity() {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    private fun sendResult() {
-        intent.putExtra("result","true")
+    private fun sendResult(text:String) {
+        intent.putExtra("result",text)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
